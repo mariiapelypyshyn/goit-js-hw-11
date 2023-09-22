@@ -17,6 +17,23 @@ let page = 1;
 let value = '';
 let totalHitsImg = 0;
 
+function onLoad() {
+  page += 1;
+  getImage();
+}
+
+function submitHandler(e) {
+  e.preventDefault();
+  value = e.currentTarget.elements.searchQuery.value.trim();
+  if (!value) {
+    message('Please write correct data!');
+    return;
+  }
+
+  clearGallery();
+  getImage();
+}
+
 function renderList(arr) {
     return arr
       .map(
@@ -54,31 +71,15 @@ function renderList(arr) {
       .join('');
   }
 
-function onLoad() {
-  page += 1;
-  getImage();
-}
-
-function submitHandler(e) {
-  e.preventDefault();
-  value = e.currentTarget.elements.searchQuery.value.trim();
-  if (!value) {
-    message('Please write correct data!');
-    return;
-  }
-
-  clearGallery();
-  getImage();
-}
-
 async function getImage() {
   try {
     const resp = await fetchImages(page, value);
     refs.galleryWrapperEl.insertAdjacentHTML(
       'beforeend',
       renderList(resp.hits)
+      
     );
-    
+    console.log(resp.hits);
     lightbox.refresh();
 
    
